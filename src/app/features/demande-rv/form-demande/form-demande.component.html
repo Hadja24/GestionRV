@@ -1,0 +1,229 @@
+<main class="demande-container">
+  <div class="form-wrapper">
+    <!-- En-tête du formulaire -->
+    <div class="form-header">
+      <div class="header-icon">
+        <i class="fas fa-calendar-plus"></i>
+      </div>
+      <div class="header-content">
+        <h1>Demander un Rendez-vous</h1>
+        <p>Remplissez ce formulaire pour prendre rendez-vous avec un professionnel de santé</p>
+      </div>
+      <div class="progress-indicator">
+        <div class="progress-step active">
+          <span class="step-number">1</span>
+          <span class="step-label">Informations</span>
+        </div>
+        <div class="progress-line"></div>
+        <div class="progress-step">
+          <span class="step-number">2</span>
+          <span class="step-label">Confirmation</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Formulaire -->
+    <form [formGroup]="demandeForm" (ngSubmit)="onSubmit()" class="demande-form">
+      <div class="form-grid">
+        <!-- Type de consultation -->
+        <div class="form-group">
+          <label for="consultationType">
+            <i class="fas fa-stethoscope"></i>
+            Type de consultation
+          </label>
+          <div class="select-wrapper">
+            <select id="consultationType" formControlName="consultationType" class="form-select">
+              <option value="">Sélectionnez un type</option>
+              <option value="generaliste">Consultation Générale</option>
+              <option value="specialiste">Consultation Spécialiste</option>
+              <option value="suivi">Suivi médical</option>
+              <option value="urgence">Analyse médicale</option>
+              <option value="teleconsultation">Scanner/IRM</option>
+            </select>
+            <i class="fas fa-chevron-down select-arrow"></i>
+          </div>
+          <div class="error-message" *ngIf="demandeForm.get('consultationType')?.invalid && demandeForm.get('consultationType')?.touched">
+            Veuillez sélectionner un type de consultation
+          </div>
+        </div>
+
+        <!-- Médecin/Spécialiste -->
+        <div class="form-group">
+          <label for="medecin">
+            <i class="fas fa-user-md"></i>
+            Médecin / Spécialiste
+          </label>
+          <div class="select-wrapper">
+            <select id="medecin" formControlName="medecin" class="form-select">
+              <option value="">Choisissez un médecin</option>
+              <option *ngFor="let medecin of medecinsList" [value]="medecin.id">
+                {{ medecin.nom }} - {{ medecin.specialite }}
+              </option>
+            </select>
+            <i class="fas fa-chevron-down select-arrow"></i>
+          </div>
+          <div class="error-message" *ngIf="demandeForm.get('medecin')?.invalid && demandeForm.get('medecin')?.touched">
+            Veuillez sélectionner un médecin
+          </div>
+        </div>
+
+        <!-- Date souhaitée -->
+        <div class="form-group">
+          <label for="date">
+            <i class="far fa-calendar-alt"></i>
+            Date souhaitée
+          </label>
+          <div class="input-with-icon">
+            <input type="date" id="date" formControlName="date" class="form-input"
+                   [min]="minDate" [max]="maxDate">
+            <i class="far fa-calendar-alt input-icon"></i>
+          </div>
+          <div class="error-message" *ngIf="demandeForm.get('date')?.invalid && demandeForm.get('date')?.touched">
+            Veuillez sélectionner une date valide
+          </div>
+        </div>
+
+        <!-- Heure souhaitée -->
+        <div class="form-group">
+          <label for="heure">
+            <i class="far fa-clock"></i>
+            Heure souhaitée
+          </label>
+          <div class="time-slots">
+            <div *ngFor="let heure of heuresDisponibles" 
+                 class="time-slot"
+                 [class.selected]="demandeForm.get('heure')?.value === heure"
+                 (click)="selectHeure(heure)">
+              {{ heure }}
+            </div>
+          </div>
+          <input type="hidden" formControlName="heure">
+          <div class="error-message" *ngIf="demandeForm.get('heure')?.invalid && demandeForm.get('heure')?.touched">
+            Veuillez sélectionner une heure
+          </div>
+        </div>
+
+        <!-- Motif de consultation -->
+        <div class="form-group full-width">
+          <label for="motif">
+            <i class="fas fa-comment-medical"></i>
+            Motif de la consultation
+          </label>
+          <div class="textarea-wrapper">
+            <textarea id="motif" formControlName="motif" class="form-textarea" 
+                      placeholder="Décrivez brièvement le motif de votre consultation..." 
+                      rows="4"></textarea>
+            <div class="char-count">
+              {{ demandeForm.get('motif')?.value?.length || 0 }}/500 caractères
+            </div>
+          </div>
+          <div class="error-message" *ngIf="demandeForm.get('motif')?.invalid && demandeForm.get('motif')?.touched">
+            Le motif est requis (entre 10 et 500 caractères)
+          </div>
+        </div>
+
+        <!-- Documents joints -->
+        <div class="form-group full-width">
+          <label>
+            <i class="fas fa-paperclip"></i>
+            Documents joints (optionnel)
+          </label>
+          <div class="file-upload-area" (click)="fileInput.click()" 
+               [class.drag-over]="isDragOver"
+               (dragover)="onDragOver($event)"
+               (dragleave)="onDragLeave($event)"
+               (drop)="onDrop($event)">
+            <input type="file" #fileInput multiple (change)="onFileSelected($event)" 
+                   accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" hidden>
+            
+            <div class="upload-content" *ngIf="!documents.length">
+              <i class="fas fa-cloud-upload-alt"></i>
+              <p>Glissez-déposez vos fichiers ici ou <span class="browse-link">parcourir</span></p>
+              <small>PDF, JPG, PNG, DOC (max 5Mo par fichier)</small>
+            </div>
+            
+            <div class="files-list" *ngIf="documents.length">
+              <div class="file-item" *ngFor="let doc of documents; let i = index">
+                <div class="file-info">
+                  <i class="fas fa-file-pdf" *ngIf="doc.type === 'pdf'"></i>
+                  <i class="fas fa-file-image" *ngIf="doc.type === 'image'"></i>
+                  <i class="fas fa-file-word" *ngIf="doc.type === 'doc'"></i>
+                  <div class="file-details">
+                    <span class="file-name">{{ doc.name }}</span>
+                    <span class="file-size">{{ doc.size }}</span>
+                  </div>
+                </div>
+                <button type="button" class="remove-file" (click)="removeDocument(i)">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Informations complémentaires -->
+        <div class="info-card full-width">
+          <div class="info-icon">
+            <i class="fas fa-info-circle"></i>
+          </div>
+          <div class="info-content">
+            <h4>Informations importantes</h4>
+            <ul>
+              <li>Votre rendez-vous sera confirmé dans les 24 heures</li>
+              <li>Présentez-vous 10 minutes avant l'heure prévue</li>
+              <li>N'oubliez pas votre carte vitale et pièce d'identité</li>
+              <li>En cas d'urgence, composez le 15</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Boutons d'action -->
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" routerLink="/dashboard">
+          <i class="fas fa-arrow-left"></i>
+          Retour au dashboard
+        </button>
+        <div class="action-buttons">
+          <button type="button" class="btn-outline" (click)="resetForm()">
+            <i class="fas fa-redo"></i>
+            Réinitialiser
+          </button>
+          <button type="submit" class="btn-primary" [disabled]="demandeForm.invalid || isSubmitting">
+            <i class="fas fa-paper-plane" *ngIf="!isSubmitting"></i>
+            <i class="fas fa-spinner fa-spin" *ngIf="isSubmitting"></i>
+            {{ isSubmitting ? 'Envoi en cours...' : 'Envoyer la demande' }}
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <!-- Prévisualisation -->
+    <div class="preview-card" *ngIf="demandeForm.valid">
+      <div class="preview-header">
+        <h3>
+          <i class="far fa-eye"></i>
+          Aperçu de votre demande
+        </h3>
+      </div>
+      <div class="preview-content">
+        <div class="preview-item">
+          <span class="preview-label">Type :</span>
+          <span class="preview-value">{{ getConsultationTypeLabel() }}</span>
+        </div>
+        <div class="preview-item">
+          <span class="preview-label">Médecin :</span>
+          <span class="preview-value">{{ getMedecinName() }}</span>
+        </div>
+        <div class="preview-item">
+          <span class="preview-label">Date :</span>
+          <span class="preview-value">{{ formatDate(demandeForm.get('date')?.value) }}</span>
+        </div>
+        <div class="preview-item">
+          <span class="preview-label">Heure :</span>
+          <span class="preview-value">{{ demandeForm.get('heure')?.value }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

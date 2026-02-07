@@ -1,0 +1,117 @@
+<!-- ==================== DEBUT HEADER ==================== -->
+<header class="header">
+  <div class="header-top">
+    <div class="container header-container">
+      <div class="logo-brand">
+        <div class="logo">
+          <i class="fas fa-stethoscope"></i>
+          <div class="logo-text">
+            <span class="logo-primary">Natangue</span><span class="logo-secondary">Care+</span>
+          </div>
+        </div>
+        <div class="current-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>{{ currentDate | date:'fullDate' }}</span>
+        </div>
+      </div>
+
+      <div class="user-actions">
+        <button class="notification-btn">
+          <i class="far fa-bell"></i>
+          <span class="notification-badge">3</span>
+        </button>
+        
+        <div class="user-profile">
+          <div class="user-avatar" (click)="toggleUserMenu()">
+            <img src="https://ui-avatars.com/api/?name=Jean+Dupont&background=667eea&color=fff&size=128" alt="User">
+          </div>
+          
+          <div class="user-menu" [class.active]="userMenuOpen">
+            <div class="user-info-card">
+              <div class="user-avatar-sm">
+                <img src="https://ui-avatars.com/api/?name=Jean+Dupont&background=667eea&color=fff&size=128" alt="User">
+              </div>
+              <div class="user-details">
+                <h4>Hadja Oumou Koultoumi Bah</h4>
+                <p class="user-email">hadja.koultoumi&#64;example.com</p>
+                <p class="user-id">ID: PAT-2024-001</p>
+              </div>
+            </div>
+            
+            <div class="menu-divider"></div>
+            
+            <a href="#" class="menu-item">
+              <i class="fas fa-user-circle"></i>
+              <span>Mon Profil</span>
+            </a>
+            <a href="#" class="menu-item">
+              <i class="fas fa-cog"></i>
+              <span>Paramètres</span>
+            </a>
+            <a href="#" class="menu-item">
+              <i class="fas fa-shield-alt"></i>
+              <span>Confidentialité</span>
+            </a>
+            
+            <div class="menu-divider"></div>
+            
+            <a href="#" class="menu-item logout" (click)="logout()">
+              <i class="fas fa-sign-out-alt"></i>
+              <span>Déconnexion</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="header-nav">
+    <div class="container nav-container">
+      <a href="#" class="nav-item active" routerLink="/dash">
+        <div class="nav-icon">
+          <i class="fas fa-home"></i>
+        </div>
+        <span class="nav-text">Tableau de Bord</span>
+      </a>
+      
+      <a href="#" class="nav-item" routerLink="/rv">
+        <div class="nav-icon">
+          <i class="fas fa-calendar-check"></i>
+        </div>
+        <span class="nav-text">Mes Rendez-vous</span>
+        <span class="nav-badge">2</span>
+      </a>
+      
+      <a href="#" class="nav-item" routerLink="/medical-records">
+        <div class="nav-icon">
+          <i class="fas fa-file-medical"></i>
+        </div>
+        <span class="nav-text">Dossier Médical</span>
+      </a>
+      
+      <a href="#" class="nav-item" routerLink="/prescriptions">
+        <div class="nav-icon">
+          <i class="fas fa-prescription-bottle-alt"></i>
+        </div>
+        <span class="nav-text">Ordonnances</span>
+        <span class="nav-badge">3</span>
+      </a>
+      
+      <a href="#" class="nav-item" routerLink="/messages">
+        <div class="nav-icon">
+          <i class="fas fa-comment-medical"></i>
+        </div>
+        <span class="nav-text">Messages</span>
+        <span class="nav-badge">5</span>
+      </a>
+      
+      <a href="#" class="nav-item" routerLink="/form-demande">
+        <div class="nav-icon">
+          <i class="fas fa-user-md"></i>
+        </div>
+        <span class="nav-text">Demande RV</span>
+      </a>
+    </div>
+  </nav>
+</header>
+<!-- ==================== FIN HEADER ==================== -->
