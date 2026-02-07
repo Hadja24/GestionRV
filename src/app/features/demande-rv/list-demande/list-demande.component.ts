@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { RouterLink, RouterModule } from '@angular/router';
 
 interface RendezVous {
   id: number;
@@ -19,7 +19,7 @@ interface RendezVous {
 @Component({
   selector: 'app-list-demande',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, RouterLink],
   templateUrl: './list-demande.component.html',
   styleUrls: ['./list-demande.component.css']
 })
