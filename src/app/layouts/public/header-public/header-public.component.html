@@ -1,0 +1,40 @@
+<!-- ==================== DEBUT HEADER PUBLIC ==================== -->
+<header class="header public-header">
+  <div class="header-top">
+    <div class="container header-container">
+      <!-- Logo et nom du site -->
+      <div class="logo-brand">
+        <div class="logo">
+          <i class="fas fa-stethoscope"></i>
+          <div class="logo-text">
+            <span class="logo-primary">Natangue</span><span class="logo-secondary">Care+</span>
+          </div>
+        </div>
+        <div class="tagline">
+          <span class="tagline-text">Votre santé, notre priorité</span>
+        </div>
+      </div>
+
+      <!-- Actions pour utilisateur non connecté -->
+      <div class="auth-actions">
+        <a routerLink="/public/login" class="btn btn-outline-primary btn-sm">
+          <i class="fas fa-sign-in-alt"></i>
+          <span>Connexion</span>
+        </a>
+        <a routerLink="/public/create-patient" class="btn btn-primary btn-sm">
+          <i class="fas fa-user-plus"></i>
+          <span>Inscription</span>
+        </a>
+        
+        <!-- Langue optionnelle -->
+        <div class="language-selector">
+          <select class="form-select form-select-sm">
+            <option value="fr">🇫🇷 FR</option>
+            <option value="en">🇬🇧 EN</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+<!-- ==================== FIN HEADER PUBLIC ==================== -->

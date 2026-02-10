@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormDemandeComponent } from '../private/demande-rv/form-demande/form-demande.component';
+import { FormDemandeComponent } from './form-demande/form-demande.component';
 import { ListDemandeComponent } from './list-demande/list-demande.component';
 
 @Component({

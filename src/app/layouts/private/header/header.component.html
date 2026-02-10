@@ -67,14 +67,14 @@
 
   <nav class="header-nav">
     <div class="container nav-container">
-      <a href="#" class="nav-item active" routerLink="/dash">
+      <a class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/private/dash">
         <div class="nav-icon">
           <i class="fas fa-home"></i>
         </div>
         <span class="nav-text">Tableau de Bord</span>
       </a>
       
-      <a href="#" class="nav-item" routerLink="/list-rv">
+      <a class="nav-link" routerLinkActive="active" routerLink="/private/list-rv">
         <div class="nav-icon">
           <i class="fas fa-calendar-check"></i>
         </div>
@@ -82,14 +82,14 @@
         <span class="nav-badge">2</span>
       </a>
       
-      <a href="#" class="nav-item" routerLink="/medical-records">
+      <a class="nav-link" routerLinkActive="active" routerLink="/medical-records">
         <div class="nav-icon">
           <i class="fas fa-file-medical"></i>
         </div>
         <span class="nav-text">Dossier Médical</span>
       </a>
       
-      <a href="#" class="nav-item" routerLink="/prescriptions">
+      <a class="nav-link" routerLinkActive="active" routerLink="/prescriptions">
         <div class="nav-icon">
           <i class="fas fa-prescription-bottle-alt"></i>
         </div>
@@ -97,7 +97,7 @@
         <span class="nav-badge">3</span>
       </a>
       
-      <a href="#" class="nav-item" routerLink="/messages">
+      <a class="nav-link" routerLinkActive="active" routerLink="/messages">
         <div class="nav-icon">
           <i class="fas fa-comment-medical"></i>
         </div>
@@ -105,7 +105,7 @@
         <span class="nav-badge">5</span>
       </a>
       
-      <a href="#" class="nav-item" routerLink="/form-demande">
+      <a class="nav-link" routerLinkActive="active" routerLink="/private/form-demande">
         <div class="nav-icon">
           <i class="fas fa-user-md"></i>
         </div>

@@ -1,12 +1,12 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, RouterModule } from '@angular/router';
+import { RouterLink, RouterLinkActive, RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-header',
+  selector: 'app-header-private',
   standalone: true,
-  imports: [CommonModule, RouterModule, RouterLink],
+  imports: [CommonModule, RouterModule, RouterLink, RouterLinkActive],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
