@@ -1,0 +1,320 @@
+<div class="liste-rv-container">
+  <!-- En-tête de la page (tel que vous l'avez demandé) -->
+  <div class="page-header">
+    <div class="header-content">
+      <div class="title-section">
+        <h1>
+          <i class="fas fa-calendar-check"></i>
+          Mes Rendez-vous
+        </h1>
+        <p class="subtitle">Consultez et gérez tous vos rendez-vous médicaux</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn-primary" routerLink="/private/form-demande">
+          <i class="fas fa-calendar-plus"></i>
+          Nouveau RDV
+        </button>
+        <button class="btn-outline" (click)="chargerRendezVous()">
+          <i class="fas fa-sync-alt"></i>
+          Actualiser
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Statistiques et résumé -->
+  <div class="stats-summary">
+    <div class="stat-card">
+      <div class="stat-icon" style="background: #10b98120; color: #10b981;">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      <div class="stat-info">
+        <h3>{{ getCountByStatus('confirmé') }}</h3>
+        <p>Confirmés</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon" style="background: #f59e0b20; color: #f59e0b;">
+        <i class="fas fa-clock"></i>
+      </div>
+      <div class="stat-info">
+        <h3>{{ getCountByStatus('en_attente') }}</h3>
+        <p>En attente</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon" style="background: #3b82f620; color: #3b82f6;">
+        <i class="fas fa-history"></i>
+      </div>
+      <div class="stat-info">
+        <h3>{{ getCountByStatus('terminé') }}</h3>
+        <p>Terminés</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon" style="background: #ef444420; color: #ef4444;">
+        <i class="fas fa-times-circle"></i>
+      </div>
+      <div class="stat-info">
+        <h3>{{ getCountByStatus('annulé') }}</h3>
+        <p>Annulés</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtres de recherche -->
+  <div class="filters-section">
+    <div class="filters-row">
+      <!-- Filtre par statut -->
+      <div class="filter-group">
+        <label for="statutFilter">
+          <i class="fas fa-filter"></i>
+          Statut
+        </label>
+        <div class="filter-select">
+          <select id="statutFilter" [(ngModel)]="statutFilter" (change)="appliquerFiltres()">
+            <option value="tous">Tous les statuts</option>
+            <option value="confirmé">Confirmés</option>
+            <option value="en_attente">En attente</option>
+            <option value="annulé">Annulés</option>
+            <option value="terminé">Terminés</option>
+          </select>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+      </div>
+
+      <!-- Filtre par spécialité -->
+      <div class="filter-group">
+        <label for="specialiteFilter">
+          <i class="fas fa-stethoscope"></i>
+          Spécialité
+        </label>
+        <div class="filter-select">
+          <select id="specialiteFilter" [(ngModel)]="specialiteFilter" (change)="appliquerFiltres()">
+            <option value="toutes">Toutes les spécialités</option>
+            <option value="généraliste">Médecine générale</option>
+            <option value="cardiologie">Cardiologie</option>
+            <option value="dermatologie">Dermatologie</option>
+            <option value="gynécologie">Gynécologie</option>
+            <option value="pédiatrie">Pédiatrie</option>
+            <option value="ophtalmologie">Ophtalmologie</option>
+          </select>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+      </div>
+
+      <!-- Bouton réinitialiser -->
+      <div class="filter-group">
+        <label>&nbsp;</label>
+        <button class="btn-outline reset-btn" (click)="reinitialiserFiltres()">
+          <i class="fas fa-redo"></i>
+          Réinitialiser
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tableau des rendez-vous -->
+  <div class="table-container">
+    <div class="table-header">
+      <div class="table-title">
+        <h3>
+          <i class="fas fa-list"></i>
+          Liste des rendez-vous
+        </h3>
+        <span class="badge">{{ filteredRendezVous.length }}</span>
+      </div>
+      <div class="table-actions">
+        <button class="btn-icon" title="Exporter" (click)="exporterListe()">
+          <i class="fas fa-download"></i>
+        </button>
+        <button class="btn-icon" title="Imprimer" (click)="imprimerListe()">
+          <i class="fas fa-print"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Message si aucun résultat -->
+    <div *ngIf="filteredRendezVous.length === 0" class="empty-state">
+      <div class="empty-icon">
+        <i class="far fa-calendar-times"></i>
+      </div>
+      <h3>Aucun rendez-vous trouvé</h3>
+      <p>Aucun rendez-vous ne correspond à vos critères de recherche.</p>
+      <button class="btn-primary" (click)="reinitialiserFiltres()">
+        <i class="fas fa-redo"></i>
+        Réinitialiser les filtres
+      </button>
+    </div>
+
+    <!-- Tableau -->
+    <div class="table-responsive" *ngIf="filteredRendezVous.length > 0">
+      <table class="rdv-table">
+        <thead>
+          <tr>
+            <th class="medecin-col">
+              <div class="th-content">
+                <i class="fas fa-user-md"></i>
+                Médecin
+              </div>
+            </th>
+            <th class="specialite-col">
+              <div class="th-content">
+                <i class="fas fa-stethoscope"></i>
+                Spécialité
+              </div>
+            </th>
+            <th class="date-col">
+              <div class="th-content">
+                <i class="far fa-calendar"></i>
+                Date
+              </div>
+            </th>
+            <th class="heure-col">
+              <div class="th-content">
+                <i class="far fa-clock"></i>
+                Heure
+              </div>
+            </th>
+            <th class="statut-col">
+              <div class="th-content">
+                <i class="fas fa-info-circle"></i>
+                Statut
+              </div>
+            </th>
+            <th class="actions-col">
+              <div class="th-content">
+                <i class="fas fa-cogs"></i>
+                Actions
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let rv of filteredRendezVous" 
+              [class.prochain]="estProchainRV(rv.date)"
+              [class.passe]="estPasse(rv.date)">
+            
+            <!-- Colonne Médecin -->
+            <td class="medecin-cell">
+              <div class="doctor-info">
+                <div class="doctor-avatar">
+                  <img [src]="getAvatarUrl(rv.medecin, rv.couleur)" alt="{{ rv.medecin }}">
+                </div>
+                <div class="doctor-details">
+                  <strong>{{ rv.medecin }}</strong>
+                  <small>{{ rv.type }}</small>
+                </div>
+              </div>
+            </td>
+            
+            <!-- Colonne Spécialité -->
+            <td class="specialite-cell">
+              <span class="specialite-badge">{{ getSpecialiteLabel(rv.specialite) }}</span>
+            </td>
+            
+            <!-- Colonne Date -->
+            <td class="date-cell">
+              <div class="date-display">
+                <div class="date-day">{{ formaterJour(rv.date) }}</div>
+                <div class="date-full">{{ formaterDateComplete(rv.date) }}</div>
+              </div>
+            </td>
+            
+            <!-- Colonne Heure -->
+            <td class="heure-cell">
+              <span class="heure-badge">
+                <i class="far fa-clock"></i>
+                {{ rv.heure }}
+              </span>
+            </td>
+            
+            <!-- Colonne Statut -->
+            <td class="statut-cell">
+              <span class="statut-badge" [style.background]="getStatutColor(rv.statut)">
+                <i [class]="getStatutIcon(rv.statut)"></i>
+                {{ getStatutText(rv.statut) }}
+              </span>
+            </td>
+            
+            <!-- Colonne Actions -->
+            <td class="actions-cell">
+              <div class="actions-buttons">
+                <!-- Bouton Voir détails -->
+                <button class="btn-action view" (click)="voirDetails(rv.id)" title="Voir détails">
+                  <i class="fas fa-eye"></i>
+                </button>
+                
+                <!-- Actions selon le statut -->
+                <ng-container [ngSwitch]="rv.statut">
+                  <!-- En attente : Confirmer ou Annuler -->
+                  <ng-container *ngSwitchCase="'en_attente'">
+                    <button class="btn-action confirm" (click)="confirmerRV(rv.id)" title="Confirmer">
+                      <i class="fas fa-check"></i>
+                    </button>
+                    <button class="btn-action cancel" (click)="annulerRV(rv.id)" title="Annuler">
+                      <i class="fas fa-times"></i>
+                    </button>
+                  </ng-container>
+                  
+                  <!-- Confirmé : Reporter ou Annuler -->
+                  <ng-container *ngSwitchCase="'confirmé'">
+                    <button class="btn-action edit" (click)="reporterRV(rv.id)" title="Reporter">
+                      <i class="fas fa-calendar-alt"></i>
+                    </button>
+                    <button class="btn-action cancel" (click)="annulerRV(rv.id)" title="Annuler">
+                      <i class="fas fa-times"></i>
+                    </button>
+                  </ng-container>
+                  
+                  <!-- Terminé : Télécharger ordonnance -->
+                  <ng-container *ngSwitchCase="'terminé'">
+                    <button class="btn-action download" (click)="telechargerOrdonnance(rv.id)" title="Ordonnance">
+                      <i class="fas fa-download"></i>
+                    </button>
+                  </ng-container>
+                  
+                  <!-- Annulé : Supprimer -->
+                  <ng-container *ngSwitchCase="'annulé'">
+                    <button class="btn-action delete" (click)="supprimerRV(rv.id)" title="Supprimer">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </ng-container>
+                </ng-container>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination" *ngIf="filteredRendezVous.length > 0">
+      <div class="pagination-info">
+        Affichage de 1 à {{ filteredRendezVous.length }} sur {{ rendezVous.length }} rendez-vous
+      </div>
+      <div class="pagination-controls">
+        <button class="pagination-btn" [disabled]="currentPage === 1" (click)="pagePrecedente()">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <span class="pagination-page">Page {{ currentPage }}</span>
+        <button class="pagination-btn" [disabled]="currentPage * pageSize >= filteredRendezVous.length" (click)="pageSuivante()">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Conseil -->
+  <div class="tips-section">
+    <div class="tip-card">
+      <div class="tip-icon">
+        <i class="fas fa-lightbulb"></i>
+      </div>
+      <div class="tip-content">
+        <h4>Conseil</h4>
+        <p>Pour une annulation ou un report, pensez à prévenir au moins 24h à l'avance pour permettre à d'autres patients de prendre rendez-vous.</p>
+      </div>
+    </div>
+  </div>
+</div>
