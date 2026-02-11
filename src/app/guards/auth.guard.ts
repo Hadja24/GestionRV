@@ -11,7 +11,10 @@ export class AuthGuard implements CanActivate {
   canActivate(): boolean {
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
     
-    if (!isLoggedIn) {
+    // TODO: Retirer ce mode de débogage en production
+    const debugMode = true; // Définir à false pour activer la vérification d'authentification
+    
+    if (!isLoggedIn && !debugMode) {
       // Rediriger vers la page de login si non connecté
       this.router.navigate(['/public/login']);
       return false;

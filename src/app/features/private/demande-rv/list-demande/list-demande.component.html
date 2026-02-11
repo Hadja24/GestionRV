@@ -203,7 +203,7 @@
                 </div>
                 <div class="doctor-details">
                   <strong>{{ rv.medecin }}</strong>
-                  <small>{{ rv.type }}</small>
+                  <small>{{ rv.typeConsultation }}</small>
                 </div>
               </div>
             </td>
@@ -230,11 +230,17 @@
             </td>
             
             <!-- Colonne Statut -->
-            <td class="statut-cell">
-              <span class="statut-badge" [style.background]="getStatutColor(rv.statut)">
-                <i [class]="getStatutIcon(rv.statut)"></i>
-                {{ getStatutText(rv.statut) }}
-              </span>
+            <td>
+              @if(rv.statut == 'CONFIRMEE'){
+                <span class="badge bg-success"><i class="bi bi-check-circle-fill"></i>
+                {{ getStatutText(rv.statut) }}</span>
+              }@else if (rv.statut == 'EN_ATTENTE'){
+                <span class="badge bg-warning"><i class="bi bi-hourglass-split"></i>
+                {{ getStatutText(rv.statut) }}</span>
+              }@else if (rv.statut == 'ANNULÉE'){
+                <span class="badge bg-danger"><i class="bi bi-x-circle-fill"></i>
+                {{ getStatutText(rv.statut) }}</span>
+              }
             </td>
             
             <!-- Colonne Actions -->
@@ -289,16 +295,24 @@
     </div>
 
     <!-- Pagination -->
-    <div class="pagination" *ngIf="filteredRendezVous.length > 0">
+    <div class="pagination" *ngIf="rendezVous.length > 0">
       <div class="pagination-info">
-        Affichage de 1 à {{ filteredRendezVous.length }} sur {{ rendezVous.length }} rendez-vous
+        Affichage de 
+        {{ (currentPage - 1) * pageSize + 1 }} 
+        à 
+        {{ getDisplayEnd() }} 
+        sur {{ rendezVous.length }} rendez-vous
       </div>
       <div class="pagination-controls">
-        <button class="pagination-btn" [disabled]="currentPage === 1" (click)="pagePrecedente()">
+        <button class="pagination-btn" 
+                [disabled]="currentPage === 1" 
+                (click)="pagePrecedente()">
           <i class="fas fa-chevron-left"></i>
         </button>
-        <span class="pagination-page">Page {{ currentPage }}</span>
-        <button class="pagination-btn" [disabled]="currentPage * pageSize >= filteredRendezVous.length" (click)="pageSuivante()">
+        <span class="pagination-page">Page {{ currentPage }} / {{ totalPages }}</span>
+        <button class="pagination-btn" 
+                [disabled]="currentPage >= totalPages" 
+                (click)="pageSuivante()">
           <i class="fas fa-chevron-right"></i>
         </button>
       </div>
